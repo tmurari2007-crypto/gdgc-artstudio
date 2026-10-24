@@ -7,10 +7,44 @@ export const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginRole, setLoginRole] = useState('admin'); // 'admin' | 'customer'
+  const [email, setEmail] = useState('admin@artstudio.com');
+  const [password, setPassword] = useState('AdminPass123!');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const selectRole = (role) => {
+    setLoginRole(role);
+    setError(null);
+    if (role === 'admin') {
+      setEmail('admin@artstudio.com');
+      setPassword('AdminPass123!');
+    } else {
+      setEmail('collector@example.com');
+      setPassword('password123');
+    }
+  };
+
+  const handleLoginWithRole = async (targetRole) => {
+    setError(null);
+    setLoading(true);
+
+    const targetEmail = targetRole === 'admin' ? (loginRole === 'admin' ? email : 'admin@artstudio.com') : (loginRole === 'customer' ? email : 'collector@example.com');
+    const targetPassword = targetRole === 'admin' ? (loginRole === 'admin' ? password : 'AdminPass123!') : (loginRole === 'customer' ? password : 'password123');
+
+    try {
+      const user = await login(targetEmail, targetPassword);
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError(err.message || 'Invalid credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,13 +66,41 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '60px var(--space-lg)', maxWidth: '500px' }}>
+    <div className="container" style={{ padding: '60px var(--space-lg)', maxWidth: '520px' }}>
       <div className="card">
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>Studio Sign In</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Access your customer collection records or studio dashboard.
+            Choose your role to automatically load credentials or type your own.
           </p>
+        </div>
+
+        {/* Role Selection Tabs */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '8px',
+          backgroundColor: 'var(--bg-subtle)',
+          padding: '6px',
+          borderRadius: 'var(--radius-sm)',
+          marginBottom: '24px'
+        }}>
+          <button
+            type="button"
+            onClick={() => selectRole('customer')}
+            className={`btn ${loginRole === 'customer' ? 'btn-primary' : 'btn-outline'}`}
+            style={{ padding: '8px 12px', fontSize: '0.9rem' }}
+          >
+            Customer Account
+          </button>
+          <button
+            type="button"
+            onClick={() => selectRole('admin')}
+            className={`btn ${loginRole === 'admin' ? 'btn-secondary' : 'btn-outline'}`}
+            style={{ padding: '8px 12px', fontSize: '0.9rem' }}
+          >
+            Studio Admin
+          </button>
         </div>
 
         {error && (
@@ -59,7 +121,7 @@ export const LoginPage = () => {
               className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. collector@artstudio.com"
+              placeholder="e.g. yourname@example.com"
               required
             />
           </div>
@@ -79,17 +141,48 @@ export const LoginPage = () => {
             />
           </div>
 
+          {/* Primary Action Button */}
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary"
+            className={`btn ${loginRole === 'admin' ? 'btn-secondary' : 'btn-primary'}`}
             style={{ width: '100%', padding: '12px', fontSize: '1rem', marginTop: '8px' }}
           >
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? 'Signing in...' : `Sign In as ${loginRole === 'admin' ? 'Studio Admin' : 'Customer'}`}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+        {/* Quick Direct 1-Click Buttons */}
+        <div style={{
+          marginTop: '20px',
+          paddingTop: '16px',
+          borderTop: '1px solid var(--border-light)',
+          textAlign: 'center'
+        }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '10px' }}>
+            ⚡ 1-Click Quick Demo Access
+          </span>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              type="button"
+              onClick={() => handleLoginWithRole('customer')}
+              className="btn btn-outline"
+              style={{ flex: 1, fontSize: '0.85rem' }}
+            >
+              Sign In as Customer
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLoginWithRole('admin')}
+              className="btn btn-outline"
+              style={{ flex: 1, fontSize: '0.85rem' }}
+            >
+              Sign In as Admin
+            </button>
+          </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
           Don't have an account yet?{' '}
           <Link to="/register" style={{ color: 'var(--terracotta)', fontWeight: 600 }}>
             Register as Customer
