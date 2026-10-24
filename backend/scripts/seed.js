@@ -32,7 +32,7 @@ export const FALLBACK_PAINTINGS = [
     price: 490,
     medium: 'Oil and graphite on cradled panel',
     dimensions: '24" x 30"',
-    imageUrl: 'https://images.unsplash.com/photo-1582561141978-8edda941994b?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
     isAvailable: true,
   },
   {
