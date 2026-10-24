@@ -9,7 +9,7 @@ export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(uri, {
       dbName: process.env.DB_NAME || 'art_studio',
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 15000,
     });
     console.log(`[Database] MongoDB connected successfully: ${conn.connection.host}`);
     return conn;
