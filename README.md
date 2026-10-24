@@ -22,10 +22,10 @@ The application supports three core studio offerings:
 
 ```
 gdgcweb/
-├── client/                     # Frontend React + Vite application
+├── frontend/                   # Frontend React + Vite application
 │   ├── public/
 │   ├── src/
-│   │   ├── components/         # Reusable UI states (Loading, Empty, Error) & ProtectedRoutes
+│   │   ├── components/         # Reusable UI states & ProtectedRoutes
 │   │   ├── context/            # Centralized AuthContext (JWT session management)
 │   │   ├── layouts/            # Boutique Navbar and Footer
 │   │   ├── pages/              # Home, Paintings, WallPainting, CustomPottery, Auth, Dashboards
@@ -36,7 +36,7 @@ gdgcweb/
 │   ├── package.json
 │   ├── vite.config.js
 │   └── .env.example
-├── server/                     # Backend Node.js + Express REST API
+├── backend/                    # Backend Node.js + Express REST API
 │   ├── config/
 │   │   └── db.js               # MongoDB connection with graceful lifecycle handlers
 │   ├── controllers/            # Auth, Painting, Order, WallBooking, Pottery, Admin controllers
